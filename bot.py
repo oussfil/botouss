@@ -23,4 +23,8 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+@bot.command(name='hey')
+async def hey(ctx):
+    await ctx.send('Hey  ❤️')
+
 bot.run(TOKEN)
