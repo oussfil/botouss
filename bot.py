@@ -27,4 +27,9 @@ async def on_message(message):
 async def hey(ctx):
     await ctx.send('Hey  ❤️')
 
+@bot.command(name='who-am-i')
+async def whoami(ctx):
+    message = f'You are: {ctx.author.name}\nYour id is: {ctx.author.id}\nYour avatar is: {ctx.author.avatar.key}\nThis server id is: {ctx.author.guild.id}'
+    await ctx.send(message)
+
 bot.run(TOKEN)
