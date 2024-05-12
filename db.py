@@ -129,4 +129,40 @@ async def getLastNMessages(n, username):
         c.close()
         mydb.close()
 
+async def getLastNMessagesChannel(n, channel_id):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ouss",
+        password="ouss",
+        database="discord"
+    )
+    query = f"""
+        SELECT
+            m.content,
+            u.username,
+            m.created_at
+        FROM
+            Messages m
+        JOIN
+            Users u ON m.user_id = u.id
+        JOIN
+            Channels c ON m.channel_id = c.id
+        WHERE
+            c.id = '{channel_id}'
+        ORDER BY
+            m.created_at DESC
+        LIMIT {n};
+    """
+    try:
+        c = mydb.cursor()
+        c.execute(query)
+        rows = c.fetchall()
+        
+        return rows
+    except Error as e:
+        print(e)
+    finally:
+        c.close()
+        mydb.close()
+
     

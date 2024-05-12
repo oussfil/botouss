@@ -2,8 +2,8 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from db import createTables, insertUser, insertChannel, insertMessage, getLastNMessages
-from format_utils import formatMessages
+from db import createTables, insertUser, insertChannel, insertMessage, getLastNMessages, getLastNMessagesChannel
+from format_utils import formatMessages, formatChannelMessages
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -75,5 +75,22 @@ async def showMessage(ctx, n=None, username=None):
         
     messages = await getLastNMessages(n, username)
     await ctx.reply(formatMessages(messages))
+
+@bot.command(name='show-message-channel')
+async def showMessageChannel(ctx, n=None, channel_id=None):
+    if channel_id is None:
+        await ctx.send('Please enter a channel_id')
+        return
+    
+    if n is None:
+        await ctx.send('Please enter n')
+        return
+    
+    elif int(n) < 0 or int(n) > 5:
+        await ctx.send('Please enter n between 0 and 5')
+        return
+        
+    messages = await getLastNMessagesChannel(n, channel_id)
+    await ctx.reply(formatChannelMessages(messages))
 
 bot.run(TOKEN)

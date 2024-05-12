@@ -6,3 +6,11 @@ def formatMessages(messages):
         res += "--------------------------\n"
 
     return res
+
+def formatChannelMessages(messages):
+    res = ""
+    for message in messages:
+        res += f"{message[1]} {message[2]}: {message[0]}\n"
+        res += "--------------------------\n"
+
+    return res
