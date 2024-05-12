@@ -165,4 +165,38 @@ async def getLastNMessagesChannel(n, channel_id):
         c.close()
         mydb.close()
 
+async def getMostActiveUser(channel_id):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ouss",
+        password="ouss",
+        database="discord"
+    )
+    query = f"""
+        SELECT 
+            u.username,
+            COUNT(*) AS message_count
+        FROM 
+            Messages m
+        JOIN
+            Users u ON m.user_id = u.id
+        WHERE 
+            m.channel_id = '{channel_id}'
+        GROUP BY 
+            u.username
+        ORDER BY
+            COUNT(*) DESC
+        LIMIT 1;
+    """
+    try:
+        c = mydb.cursor()
+        c.execute(query)
+        rows = c.fetchall()
+        return rows[0]
+    except Error as e:
+        print(e)
+    finally:
+        c.close()
+        mydb.close()
+
     

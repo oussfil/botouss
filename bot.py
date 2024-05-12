@@ -2,7 +2,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from db import createTables, insertUser, insertChannel, insertMessage, getLastNMessages, getLastNMessagesChannel
+from db import createTables, insertUser, insertChannel, insertMessage, getLastNMessages, getLastNMessagesChannel, getMostActiveUser
 from format_utils import formatMessages, formatChannelMessages
 
 load_dotenv()
@@ -92,5 +92,14 @@ async def showMessageChannel(ctx, n=None, channel_id=None):
         
     messages = await getLastNMessagesChannel(n, channel_id)
     await ctx.reply(formatChannelMessages(messages))
+
+@bot.command(name='talk-too-much')
+async def showMostActive(ctx, channel_id=None):
+    if channel_id is None:
+        await ctx.send('Please enter a channel_id')
+        return
+            
+    res = await getMostActiveUser(channel_id)
+    await ctx.reply(f"{res[0]} with {res[1]} message(s)")
 
 bot.run(TOKEN)
